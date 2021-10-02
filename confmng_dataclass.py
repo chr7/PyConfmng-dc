@@ -35,6 +35,11 @@ class ConfigurationBase:
                 dic[name] = item.to_dict(category)
         return dic
 
+    #----------------------------------------------------------------------------------------------
+    def from_dict(self, category: str, values: dict):
+        for key, value in values.items():
+            self.__dict__[key].__dict__[category] = value
+
 #--------------------------------------------------------------------------------------------------
 class ConfigManagerBase:
 

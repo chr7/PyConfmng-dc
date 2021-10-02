@@ -96,6 +96,20 @@ class TestConfigManager:
 
     #----------------------------------------------------------------------------------------------
     @pytest.mark.parametrize("category,expected", [
+            ('usr', {'level':'DEBUG', 'filename':'app.log'}),
+        ])
+    def test_setModConfigFromDict(self, confmng_single, category, expected):
+        # Arrange
+
+        # Act
+        confmng_single.logging.from_dict(category, expected)
+        conf = confmng_single.logging.to_dict(category)
+
+        # Assert
+        assert conf == expected
+
+    #----------------------------------------------------------------------------------------------
+    @pytest.mark.parametrize("category,expected", [
             ('usr', {'logging':{'level':None, 'filename':None}}),
             ('std', {'logging':{'level':'INFO', 'filename':'output.log'}})
         ])
