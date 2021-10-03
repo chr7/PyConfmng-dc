@@ -22,6 +22,10 @@ class ConfigItem:
         if self.cur is None:
             self.cur = self.std
 
+    #----------------------------------------------------------------------------------------------
+    def from_dict(self, category: str, value: any):
+        self.__dict__[category] = value
+
 #--------------------------------------------------------------------------------------------------
 class ConfigurationBase:
 
@@ -38,7 +42,7 @@ class ConfigurationBase:
     #----------------------------------------------------------------------------------------------
     def from_dict(self, category: str, values: dict):
         for key, value in values.items():
-            self.__dict__[key].__dict__[category] = value
+            eval('self.'+key).from_dict(category, value)
 
 #--------------------------------------------------------------------------------------------------
 class ConfigManagerBase:
@@ -50,6 +54,11 @@ class ConfigManagerBase:
             if isinstance(item, ConfigurationBase):
                 dic[name] = item.to_dict(category)
         return dic
+
+    #----------------------------------------------------------------------------------------------
+    def from_dict(self, category: str, values: dict):
+        for key, value in values.items():
+            eval('self.'+key).from_dict(category, value)
 
 #-- MAIN ------------------------------------------------------------------------------------------
 if __name__ == '__main__':

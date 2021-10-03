@@ -123,6 +123,20 @@ class TestConfigManager:
         assert conf == expected
 
     #----------------------------------------------------------------------------------------------
+    @pytest.mark.parametrize("category,expected", [
+            ('usr', {'logging':{'level':'DEBUG', 'filename':'app.log'}}),
+        ])
+    def test_setConfigManagerSingleFromDict(self, confmng_single, category, expected):
+        # Arrange
+
+        # Act
+        confmng_single.from_dict(category, expected)
+        conf = confmng_single.to_dict(category)
+
+        # Assert
+        assert conf == expected
+
+    #----------------------------------------------------------------------------------------------
     def test_getConfigManagerMultiAsDict(self, confmng_multi):
         # Arrange
 
