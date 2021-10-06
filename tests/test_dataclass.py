@@ -160,3 +160,32 @@ class TestConfigManager:
             }
         }
 
+    #----------------------------------------------------------------------------------------------
+    @pytest.mark.parametrize("category,expected", [
+            ('usr', {'logging':{
+                            'level':'DEBUG', 'filename':'app.log'
+                        },
+                    'applications':{
+                            'trackSpace':{'type':'Jira'},
+                            'docSpace':{'suite':'trackSpace suite'},
+                        }
+                    }
+            ),
+        ])
+    def test_setConfigManagerMultiAsDict(self, confmng_multi, category, expected):
+        # Arrange
+
+        # Act
+        confmng_multi.from_dict(category, expected)
+        conf = confmng_multi.to_dict('usr')
+
+        # Assert
+        assert conf == {
+                        'logging':{
+                            'level':'DEBUG', 'filename':'app.log'
+                        },
+                        'applications':{
+                            'trackSpace':{'url':None, 'suite':None, 'type':'Jira'},
+                            'docSpace':{'url':None,'suite':'trackSpace suite', 'type':None},
+                        }
+                    }
