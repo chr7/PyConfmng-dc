@@ -30,13 +30,15 @@ class ConfigItem:
 class ConfigurationBase:
 
     #----------------------------------------------------------------------------------------------
-    def to_dict(self, category: str='usr'):
+    def to_dict(self, category: str='usr', include_none: bool=False):
         dic = dict()
         for name, item in self.__dict__.items():
             if isinstance(item, ConfigItem):
-                dic[name] = eval('item.'+category)
+                val = eval('item.'+category)
+                if include_none or val is not None:
+                    dic[name] = val
             elif isinstance(item, ConfigurationBase):
-                dic[name] = item.to_dict(category)
+                dic[name] = item.to_dict(category, include_none)
         return dic
 
     #----------------------------------------------------------------------------------------------
@@ -48,11 +50,11 @@ class ConfigurationBase:
 class ConfigManagerBase:
 
     #----------------------------------------------------------------------------------------------
-    def to_dict(self, category: str='usr'):
+    def to_dict(self, category: str='usr', include_none: bool=False):
         dic = dict()
         for name, item in self.__dict__.items():
             if isinstance(item, ConfigurationBase):
-                dic[name] = item.to_dict(category)
+                dic[name] = item.to_dict(category, include_none)
         return dic
 
     #----------------------------------------------------------------------------------------------

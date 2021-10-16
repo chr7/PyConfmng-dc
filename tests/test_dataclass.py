@@ -161,31 +161,32 @@ class TestConfigManager:
         }
 
     #----------------------------------------------------------------------------------------------
-    @pytest.mark.parametrize("category,expected", [
-            ('usr', {'logging':{
-                            'level':'DEBUG', 'filename':'app.log'
-                        },
-                    'applications':{
-                            'trackSpace':{'type':'Jira'},
-                            'docSpace':{'suite':'trackSpace suite'},
-                        }
-                    }
+    @pytest.mark.parametrize("category,include_none, expected", [
+            ('usr', False, {'logging':{
+                                    'level':'DEBUG', 'filename':'app.log'
+                                },
+                            'applications':{
+                                    'trackSpace':{'type':'Jira'},
+                                    'docSpace':{'suite':'trackSpace suite'},
+                                }
+                            }
+            ),
+            ('usr', True, {'logging':{
+                                    'level':'DEBUG', 'filename':'app.log'
+                                },
+                            'applications':{
+                                    'trackSpace':{'url':None, 'suite':None, 'type':'Jira'},
+                                    'docSpace':{'url':None,'suite':'trackSpace suite', 'type':None},
+                                }
+                            }
             ),
         ])
-    def test_setConfigManagerMultiAsDict(self, confmng_multi, category, expected):
+    def test_setConfigManagerMultiFromDict(self, confmng_multi, category, include_none, expected):
         # Arrange
 
         # Act
         confmng_multi.from_dict(category, expected)
-        conf = confmng_multi.to_dict('usr')
+        conf = confmng_multi.to_dict('usr', include_none)
 
         # Assert
-        assert conf == {
-                        'logging':{
-                            'level':'DEBUG', 'filename':'app.log'
-                        },
-                        'applications':{
-                            'trackSpace':{'url':None, 'suite':None, 'type':'Jira'},
-                            'docSpace':{'url':None,'suite':'trackSpace suite', 'type':None},
-                        }
-                    }
+        assert conf == expected
