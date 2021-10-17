@@ -89,7 +89,7 @@ class TestConfigManager:
         # Arrange
 
         # Act
-        conf = confmng_single.logging.to_dict(category)
+        conf = confmng_single.logging.to_dict(category, True)
 
         # Assert
         assert conf == expected
@@ -117,7 +117,7 @@ class TestConfigManager:
         # Arrange
 
         # Act
-        conf = confmng_single.to_dict(category)
+        conf = confmng_single.to_dict(category, include_none=True)
 
         # Assert
         assert conf == expected
