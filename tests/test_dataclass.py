@@ -190,3 +190,34 @@ class TestConfigManager:
 
         # Assert
         assert conf == expected
+
+    #----------------------------------------------------------------------------------------------
+    @pytest.mark.parametrize("category,to_category, include_none, usr_settings, expected", [
+            ('usr', 'cur', False,
+                {
+                    'logging':{
+                        'level':'DEBUG', 'filename':'app.log'
+                    },
+                },
+                {
+                    'logging':{
+                        'level':'DEBUG', 'filename':'app.log'
+                    },
+                    'applications':{
+                        'trackSpace':{'url':'https://trackspace.lhsystems.com', 'suite':'trackSpace', 'type':'jira'},
+                        'docSpace':{'url':'https://docspace.lhsystems.com','suite':'trackSpace', 'type':'confluence'},
+                    }
+                }
+            ),
+        ])
+    def test_copyCategory(self, confmng_multi, category, to_category, include_none, usr_settings, expected):
+        # Arrange
+        from_category = category
+
+        # Act
+        confmng_multi.from_dict(category, usr_settings)
+        confmng_multi.copy_category(from_category, to_category)
+        conf = confmng_multi.to_dict('cur', include_none)
+
+        # Assert
+        assert conf == expected
