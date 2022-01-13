@@ -23,7 +23,7 @@ class ConfigItem:
             self.cur = self.std
 
     #----------------------------------------------------------------------------------------------
-    def from_dict(self, category: str, value: any):
+    def from_dict(self, value: any, category: str):
         self.__dict__[category] = value
 
     #----------------------------------------------------------------------------------------------
@@ -47,9 +47,9 @@ class ConfigurationBase:
         return dic
 
     #----------------------------------------------------------------------------------------------
-    def from_dict(self, category: str, values: dict):
+    def from_dict(self, values: dict, category: str):
         for key, value in values.items():
-            eval('self.'+key).from_dict(category, value)
+            eval('self.'+key).from_dict(value, category)
 
     #----------------------------------------------------------------------------------------------
     def copy_category(self, from_category: str, to_category: str, include_none: bool=False):
@@ -71,9 +71,9 @@ class ConfigManagerBase:
         return dic
 
     #----------------------------------------------------------------------------------------------
-    def from_dict(self, category: str, values: dict):
+    def from_dict(self, values: dict, category: str):
         for key, value in values.items():
-            eval('self.'+key).from_dict(category, value)
+            eval('self.'+key).from_dict(value, category)
 
     #----------------------------------------------------------------------------------------------
     def copy_category(self, from_category: str, to_category: str, include_none: bool=False):

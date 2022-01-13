@@ -102,7 +102,7 @@ class TestConfigManager:
         # Arrange
 
         # Act
-        confmng_single.logging.from_dict(category, expected)
+        confmng_single.logging.from_dict(expected, category)
         conf = confmng_single.logging.to_dict(category)
 
         # Assert
@@ -130,7 +130,7 @@ class TestConfigManager:
         # Arrange
 
         # Act
-        confmng_single.from_dict(category, expected)
+        confmng_single.from_dict(expected, category)
         conf = confmng_single.to_dict(category)
 
         # Assert
@@ -185,7 +185,7 @@ class TestConfigManager:
         # Arrange
 
         # Act
-        confmng_multi.from_dict(category, expected)
+        confmng_multi.from_dict(expected, category)
         conf = confmng_multi.to_dict('usr', include_none)
 
         # Assert
@@ -215,7 +215,7 @@ class TestConfigManager:
         from_category = category
 
         # Act
-        confmng_multi.from_dict(category, usr_settings)
+        confmng_multi.from_dict(usr_settings, category)
         confmng_multi.copy_category(from_category, to_category)
         conf = confmng_multi.to_dict('cur', include_none)
 
