@@ -14,28 +14,39 @@ from confmng_dataclass import ConfigItem, ConfigManagerBase, ConfigurationBase
 #--------------------------------------------------------------------------------------------------
 @dataclass
 class LoggingConfiguration(ConfigurationBase):
-    level: ConfigItem = ConfigItem(des='level of logging verbossity', std='INFO')
-    filename: ConfigItem = ConfigItem(None, 'output.log', None, 'file name of the log file')
+    level: ConfigItem = None
+    filename: ConfigItem = None
 
-#--------------------------------------------------------------------------------------------------
+    #----------------------------------------------------------------------------------------------
+    def __post_init__(self):
+        self.level = ConfigItem(std='INFO', des='level of logging verbossity')
+        self.filename = ConfigItem(None, 'output.log', None, 'file name of the log file')
+
+#-------------------------------------------------------------------------------------------------
 @dataclass
 class ApplicationItem(ConfigurationBase):
-    url: ConfigItem
-    suite: ConfigItem
-    type: ConfigItem
+    url: ConfigItem = None
+    suite: ConfigItem = None
+    type: ConfigItem = None
 
 @dataclass
 class ApplicationConfiguration(ConfigurationBase):
-    trackSpace: ApplicationItem = ApplicationItem(
-        url=ConfigItem(std='https://trackspace.lhsystems.com', des='URL of the application'),
-        suite=ConfigItem(std='trackSpace', des='suite the application belongs to'),
-        type=ConfigItem(std='jira', des='type of the application')
-    )
-    docSpace: ApplicationItem = ApplicationItem(
-        url=ConfigItem(std='https://docspace.lhsystems.com', des='URL of the application'),
-        suite=ConfigItem(std='trackSpace', des='suite the application belongs to'),
-        type=ConfigItem(std='confluence', des='type of the application')
-    )
+    trackSpace: ApplicationItem = None
+    docSpace: ApplicationItem = None
+
+    #----------------------------------------------------------------------------------------------
+    def __post_init__(self):
+        self.trackSpace = ApplicationItem(
+            url=ConfigItem(std='https://trackspace.lhsystems.com', des='URL of the application'),
+            suite=ConfigItem(std='trackSpace', des='suite the application belongs to'),
+            type=ConfigItem(std='jira', des='type of the application')
+        )
+        self.docSpace = ApplicationItem(
+            url=ConfigItem(std='https://docspace.lhsystems.com', des='URL of the application'),
+            suite=ConfigItem(std='trackSpace', des='suite the application belongs to'),
+            type=ConfigItem(std='confluence', des='type of the application')
+        )
+
 
 #--------------------------------------------------------------------------------------------------
 @pytest.fixture
