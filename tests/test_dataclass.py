@@ -97,10 +97,10 @@ class TestConfigManager:
 
     #----------------------------------------------------------------------------------------------
     @pytest.mark.parametrize("category,expected", [
-            ('usr', {'level': None, 'filename': None}),
-            ('std', {'level': 'INFO', 'filename': 'output.log'}),
-            ('cur', {'level': 'INFO', 'filename': 'output.log'})
-        ])
+        ('usr', {'level': None, 'filename': None}),
+        ('std', {'level': 'INFO', 'filename': 'output.log'}),
+        ('cur', {'level': 'INFO', 'filename': 'output.log'})
+    ])
     def test_getModConfigAsDict(self, confmng_single, category, expected):
         # Arrange
 
@@ -112,8 +112,8 @@ class TestConfigManager:
 
     #----------------------------------------------------------------------------------------------
     @pytest.mark.parametrize("category,expected", [
-            ('usr', {'level': 'DEBUG', 'filename': 'app.log'}),
-        ])
+        ('usr', {'level': 'DEBUG', 'filename': 'app.log'}),
+    ])
     def test_setModConfigFromDict(self, confmng_single, category, expected):
         # Arrange
 
@@ -126,9 +126,9 @@ class TestConfigManager:
 
     #----------------------------------------------------------------------------------------------
     @pytest.mark.parametrize("category,expected", [
-            ('usr', {'logging': {'level': None, 'filename': None}}),
-            ('std', {'logging': {'level': 'INFO', 'filename': 'output.log'}})
-        ])
+        ('usr', {'logging': {'level': None, 'filename': None}}),
+        ('std', {'logging': {'level': 'INFO', 'filename': 'output.log'}})
+    ])
     def test_getConfigManagerSingleAsDict(self, confmng_single, category, expected):
         # Arrange
 
@@ -140,8 +140,8 @@ class TestConfigManager:
 
     #----------------------------------------------------------------------------------------------
     @pytest.mark.parametrize("category,expected", [
-            ('usr', {'logging': {'level': 'DEBUG', 'filename': 'app.log'}}),
-        ])
+        ('usr', {'logging': {'level': 'DEBUG', 'filename': 'app.log'}}),
+    ])
     def test_setConfigManagerSingleFromDict(self, confmng_single, category, expected):
         # Arrange
 
@@ -154,22 +154,22 @@ class TestConfigManager:
 
     #----------------------------------------------------------------------------------------------
     @pytest.mark.parametrize("category,expected", [
-            ('std', {
-                'logging': {'level': 'INFO', 'filename': 'output.log'},
-                'applications': {
-                    'trackSpace': {
-                        'url': 'https://trackspace.lhsystems.com',
-                        'suite': 'trackSpace',
-                        'type': 'jira'
-                    },
-                    'docSpace': {
-                        'url': 'https://docspace.lhsystems.com',
-                        'suite': 'trackSpace',
-                        'type': 'confluence'
-                    }
+        ('std', {
+            'logging': {'level': 'INFO', 'filename': 'output.log'},
+            'applications': {
+                'trackSpace': {
+                    'url': 'https://trackspace.lhsystems.com',
+                    'suite': 'trackSpace',
+                    'type': 'jira'
+                },
+                'docSpace': {
+                    'url': 'https://docspace.lhsystems.com',
+                    'suite': 'trackSpace',
+                    'type': 'confluence'
                 }
-            }),
-        ])
+            }
+        }),
+    ])
     def test_getConfigManagerMultiAsDict(self, confmng_multi, category, expected):
         # Arrange
 
@@ -181,25 +181,29 @@ class TestConfigManager:
 
     #----------------------------------------------------------------------------------------------
     @pytest.mark.parametrize("category,include_none, expected", [
-            ('usr', False, {'logging': {
-                                    'level': 'DEBUG', 'filename': 'app.log'
-                                },
-                            'applications': {
-                                    'trackSpace': {'type': 'Jira'},
-                                    'docSpace': {'suite': 'trackSpace suite'},
-                                }
-                            }
-            ),
-            ('usr', True, {'logging': {
-                                    'level': 'DEBUG', 'filename': 'app.log'
-                                },
-                            'applications': {
-                                    'trackSpace': {'url': None, 'suite': None, 'type': 'Jira'},
-                                    'docSpace': {'url': None, 'suite': 'trackSpace suite', 'type': None},
-                                }
-                            }
-            ),
-        ])
+        ('usr', False,
+            {
+                'logging': {
+                    'level': 'DEBUG', 'filename': 'app.log'
+                },
+                'applications': {
+                    'trackSpace': {'type': 'Jira'},
+                    'docSpace': {'suite': 'trackSpace suite'},
+                }
+            }
+         ),
+        ('usr', True,
+            {
+                'logging': {
+                    'level': 'DEBUG', 'filename': 'app.log'
+                },
+                'applications': {
+                    'trackSpace': {'url': None, 'suite': None, 'type': 'Jira'},
+                    'docSpace': {'url': None, 'suite': 'trackSpace suite', 'type': None},
+                }
+            }
+         ),
+    ])
     def test_setConfigManagerMultiFromDict(self, confmng_multi, category, include_none, expected):
         # Arrange
 
@@ -212,24 +216,27 @@ class TestConfigManager:
 
     #----------------------------------------------------------------------------------------------
     @pytest.mark.parametrize("category,to_category, include_none, usr_settings, expected", [
-            ('usr', 'cur', False,
-                {
-                    'logging': {
-                        'level': 'DEBUG', 'filename': 'app.log'
-                    },
+        ('usr', 'cur', False,
+            {
+                'logging': {
+                    'level': 'DEBUG', 'filename': 'app.log'
                 },
-                {
-                    'logging': {
-                        'level': 'DEBUG', 'filename': 'app.log'
-                    },
-                    'applications': {
-                        'trackSpace': {'url': 'https://trackspace.lhsystems.com', 'suite': 'trackSpace', 'type': 'jira'},
-                        'docSpace': {'url': 'https://docspace.lhsystems.com', 'suite': 'trackSpace', 'type': 'confluence'},
-                    }
+            },
+            {
+                'logging': {
+                    'level': 'DEBUG', 'filename': 'app.log'
+                },
+                'applications': {
+                    'trackSpace': {'url': 'https://trackspace.lhsystems.com', 'suite': 'trackSpace',
+                                   'type': 'jira'},
+                    'docSpace': {'url': 'https://docspace.lhsystems.com', 'suite': 'trackSpace',
+                                 'type': 'confluence'},
                 }
-            ),
-        ])
-    def test_copyCategory(self, confmng_multi, category, to_category, include_none, usr_settings, expected):
+            }
+         ),
+    ])
+    def test_copyCategory(self, confmng_multi, category, to_category, include_none, usr_settings,
+                          expected):
         # Arrange
         from_category = category
 
