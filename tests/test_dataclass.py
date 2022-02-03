@@ -148,28 +148,32 @@ class TestConfigManager:
         assert conf == expected
 
     #----------------------------------------------------------------------------------------------
-    def test_getConfigManagerMultiAsDict(self, confmng_multi):
+    @pytest.mark.parametrize("category,expected", [
+            ('std', {
+                'logging': {'level': 'INFO', 'filename': 'output.log'},
+                'applications': {
+                    'trackSpace': {
+                        'url': 'https://trackspace.lhsystems.com',
+                        'suite': 'trackSpace',
+                        'type': 'jira'
+                    },
+                    'docSpace': {
+                        'url': 'https://docspace.lhsystems.com',
+                        'suite': 'trackSpace',
+                        'type': 'confluence'
+                    }
+                }
+            }),
+        ])
+    def test_getConfigManagerMultiAsDict(self, confmng_multi, category, expected):
         # Arrange
 
         # Act
-        conf = confmng_multi.to_dict('std')
+        conf = confmng_multi.to_dict(category)
 
         # Assert
-        assert conf == {
-            'logging':{'level':'INFO', 'filename':'output.log'},
-            'applications':{
-                'trackSpace':{
-                    'url':'https://trackspace.lhsystems.com',
-                    'suite':'trackSpace',
-                    'type':'jira'
-                },
-                'docSpace':{
-                    'url':'https://docspace.lhsystems.com',
-                    'suite':'trackSpace',
-                    'type':'confluence'
-                }
-            }
-        }
+        assert conf == expected
+
 
     #----------------------------------------------------------------------------------------------
     @pytest.mark.parametrize("category,include_none, expected", [
