@@ -27,19 +27,20 @@ class ConfigItem:
         self.__dict__[category] = value
 
     #----------------------------------------------------------------------------------------------
-    def copy_category(self, from_category: str, to_category: str, include_none: bool=False):
+    def copy_category(self, from_category: str, to_category: str, include_none: bool = False):
         if include_none or self.__dict__[from_category] is not None:
             self.__dict__[to_category] = self.__dict__[from_category]
+
 
 #--------------------------------------------------------------------------------------------------
 class ConfigurationBase:
 
     #----------------------------------------------------------------------------------------------
-    def to_dict(self, category: str='usr', include_none: bool=False):
+    def to_dict(self, category: str = 'usr', include_none: bool = False):
         dic = dict()
         for name, item in self.__dict__.items():
             if isinstance(item, ConfigItem):
-                val = eval('item.'+category)
+                val = eval('item.' + category)
                 if include_none or val is not None:
                     dic[name] = val
             elif isinstance(item, ConfigurationBase):
@@ -49,21 +50,22 @@ class ConfigurationBase:
     #----------------------------------------------------------------------------------------------
     def from_dict(self, values: dict, category: str):
         for key, value in values.items():
-            eval('self.'+key).from_dict(value, category)
+            eval('self.' + key).from_dict(value, category)
 
     #----------------------------------------------------------------------------------------------
-    def copy_category(self, from_category: str, to_category: str, include_none: bool=False):
+    def copy_category(self, from_category: str, to_category: str, include_none: bool = False):
         for name, item in self.__dict__.items():
             if isinstance(item, ConfigItem):
                 item.copy_category(from_category, to_category, include_none)
             elif isinstance(item, ConfigurationBase):
                 item.copy_category(from_category, to_category, include_none)
 
+
 #--------------------------------------------------------------------------------------------------
 class ConfigManagerBase:
 
     #----------------------------------------------------------------------------------------------
-    def to_dict(self, category: str='usr', include_none: bool=False):
+    def to_dict(self, category: str = 'usr', include_none: bool = False):
         dic = dict()
         for name, item in self.__dict__.items():
             if isinstance(item, ConfigurationBase):
@@ -73,13 +75,14 @@ class ConfigManagerBase:
     #----------------------------------------------------------------------------------------------
     def from_dict(self, values: dict, category: str):
         for key, value in values.items():
-            eval('self.'+key).from_dict(value, category)
+            eval('self.' + key).from_dict(value, category)
 
     #----------------------------------------------------------------------------------------------
-    def copy_category(self, from_category: str, to_category: str, include_none: bool=False):
+    def copy_category(self, from_category: str, to_category: str, include_none: bool = False):
         for name, item in self.__dict__.items():
             if isinstance(item, ConfigurationBase):
                 item.copy_category(from_category, to_category, include_none)
+
 
 #-- MAIN ------------------------------------------------------------------------------------------
 if __name__ == '__main__':
