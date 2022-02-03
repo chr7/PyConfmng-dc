@@ -247,3 +247,24 @@ class TestConfigManager:
 
         # Assert
         assert conf == expected
+
+    #----------------------------------------------------------------------------------------------
+    def test_editValue(self, confmng_single):
+        # Arrange
+        usr_settings = {'logging': {'level': 'DEBUG', 'filename': 'app.log'}}
+        to_category = 'usr'
+        confmng_single.from_dict(usr_settings, to_category)
+
+        from_category = 'usr'
+        to_category = 'cur'
+        confmng_single.copy_category(from_category, to_category)
+
+        # Act
+        confmng_single.logging.level.cur = 'INFO'
+
+        # Assert
+        cur_settings = confmng_single.to_dict('cur', include_none=False)
+        assert cur_settings == {'logging': {'level': 'INFO', 'filename': 'app.log'}}
+
+        usr_settings = confmng_single.to_dict('usr', include_none=False)
+        assert usr_settings == {'logging': {'level': 'DEBUG', 'filename': 'app.log'}}
