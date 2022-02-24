@@ -8,12 +8,12 @@
 from dataclasses import dataclass, field
 
 import pytest
-from confmng_dataclass import ConfigItem, ConfigManagerBase, ConfigurationBase
+from confmng_dataclass import ConfigItem, ConfigManagerBase
 
 
 #--------------------------------------------------------------------------------------------------
 @dataclass
-class LoggingConfiguration(ConfigurationBase):
+class LoggingConfiguration(ConfigManagerBase):
     level: ConfigItem = None
     filename: ConfigItem = None
 
@@ -25,14 +25,14 @@ class LoggingConfiguration(ConfigurationBase):
 
 #-------------------------------------------------------------------------------------------------
 @dataclass
-class ApplicationItem(ConfigurationBase):
+class ApplicationItem(ConfigManagerBase):
     url: ConfigItem = None
     suite: ConfigItem = None
     type: ConfigItem = None
 
 
 @dataclass
-class ApplicationConfiguration(ConfigurationBase):
+class ApplicationConfiguration(ConfigManagerBase):
     trackSpace: ApplicationItem = None
     docSpace: ApplicationItem = None
 

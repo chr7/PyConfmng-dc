@@ -12,6 +12,8 @@ from typing import Any
 #--------------------------------------------------------------------------------------------------
 @dataclass
 class ConfigItem:
+    """ The ConfigItem represents a single configuration item
+    """
     cur: Any = field(default=None)
     std: Any = field(default=None)
     usr: Any = field(default=None)
@@ -33,8 +35,9 @@ class ConfigItem:
 
 
 #--------------------------------------------------------------------------------------------------
-class ConfigurationBase:
-
+class ConfigManagerBase:
+    """ Represents a set of configuration items. The Config Manager can be nested.
+    """
     #----------------------------------------------------------------------------------------------
     def to_dict(self, category: str = 'usr', include_none: bool = False):
         dic = dict()
@@ -43,7 +46,7 @@ class ConfigurationBase:
                 val = eval('item.' + category)
                 if include_none or val is not None:
                     dic[name] = val
-            elif isinstance(item, ConfigurationBase):
+            elif isinstance(item, ConfigManagerBase):
                 dic[name] = item.to_dict(category, include_none)
         return dic
 
@@ -55,32 +58,7 @@ class ConfigurationBase:
     #----------------------------------------------------------------------------------------------
     def copy_category(self, from_category: str, to_category: str, include_none: bool = False):
         for name, item in self.__dict__.items():
-            if isinstance(item, ConfigItem):
-                item.copy_category(from_category, to_category, include_none)
-            elif isinstance(item, ConfigurationBase):
-                item.copy_category(from_category, to_category, include_none)
-
-
-#--------------------------------------------------------------------------------------------------
-class ConfigManagerBase:
-
-    #----------------------------------------------------------------------------------------------
-    def to_dict(self, category: str = 'usr', include_none: bool = False):
-        dic = dict()
-        for name, item in self.__dict__.items():
-            if isinstance(item, ConfigurationBase):
-                dic[name] = item.to_dict(category, include_none)
-        return dic
-
-    #----------------------------------------------------------------------------------------------
-    def from_dict(self, values: dict, category: str):
-        for key, value in values.items():
-            eval('self.' + key).from_dict(value, category)
-
-    #----------------------------------------------------------------------------------------------
-    def copy_category(self, from_category: str, to_category: str, include_none: bool = False):
-        for name, item in self.__dict__.items():
-            if isinstance(item, ConfigurationBase):
+            if isinstance(item, ConfigItem) or isinstance(item, ConfigManagerBase):
                 item.copy_category(from_category, to_category, include_none)
 
 
