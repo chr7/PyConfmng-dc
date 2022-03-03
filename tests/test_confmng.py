@@ -268,3 +268,112 @@ class TestConfigManager:
 
         usr_settings = confmng_single.to_dict('usr', include_none=False)
         assert usr_settings == {'logging': {'level': 'DEBUG', 'filename': 'app.log'}}
+
+
+#--------------------------------------------------------------------------------------------------
+class TestApp:
+
+    #----------------------------------------------------------------------------------------------
+    @dataclass
+    class Person(ConfigManagerBase):
+        name: str
+        pay: int
+        bonus: ConfigItem = None
+
+        #------------------------------------------------------------------------------------------
+        def __post_init__(self):
+            self.bonus = ConfigItem(
+                std=0.1,
+                des='bonus a person gets',
+            )
+
+        #------------------------------------------------------------------------------------------
+        def giveraise(self, percent):
+            self.pay = int(self.pay * (1 + ((percent / 100) + self.bonus.cur)))
+
+    #----------------------------------------------------------------------------------------------
+    class Manager(Person):
+
+        #------------------------------------------------------------------------------------------
+        def __post_init__(self):
+            self.bonus = ConfigItem(
+                std=0.5,
+                des='bonus a manger gets',
+            )
+
+    #----------------------------------------------------------------------------------------------
+    @dataclass
+    class DepartmentManager(Manager):
+        department: str = None
+
+        #------------------------------------------------------------------------------------------
+        def __post_init__(self):
+            super().__post_init__()
+            self.department = ConfigItem(
+                std='A',
+                des='Name of the department'
+            )
+
+    #----------------------------------------------------------------------------------------------
+    def test_std_configuration(self):
+        # Arrange
+        alice = TestApp.Person('Alice', 100)
+
+        # Act
+        alice.giveraise(10)
+
+        # Assert
+        assert alice.pay == 120
+
+    #----------------------------------------------------------------------------------------------
+    def test_reconfiguration(self):
+        # Arrange
+        bob = TestApp.Person('Bob', 100)
+        bob.from_dict({'bonus': 0.2}, 'usr')
+        bob.copy_category('usr', 'cur')
+
+        # Act
+        bob.giveraise(10)
+
+        # Assert
+        assert bob.pay == 130
+
+    #----------------------------------------------------------------------------------------------
+    def test_get_configuration(self):
+        # Arrange
+        charly = TestApp.Person('Charly', 100)
+
+        # Act
+        charly.giveraise(10)
+        charly.copy_category('cur', 'usr')
+        usr_conf = charly.to_dict('usr')
+
+        # Assert
+        assert charly.pay == 120
+        assert usr_conf == {'bonus': 0.1}
+
+    #----------------------------------------------------------------------------------------------
+    def test_one_inheritance(self):
+        # Arrange
+        david = TestApp.Manager('David', 100)
+
+        # Act
+        david.giveraise(10)
+        cur_conf = david.to_dict('cur')
+
+        # Assert
+        assert david.pay == 160
+        assert cur_conf == {'bonus': 0.5}
+
+    #----------------------------------------------------------------------------------------------
+    def test_two_inheritance(self):
+        # Arrange
+        eloy = TestApp.DepartmentManager('Eloy', 100)
+
+        # Act
+        eloy.giveraise(10)
+        cur_conf = eloy.to_dict('cur')
+
+        # Assert
+        assert eloy.pay == 160
+        assert cur_conf == {'bonus': 0.5, 'department': 'A'}
