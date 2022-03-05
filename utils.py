@@ -2,6 +2,7 @@ import re
 import pytest
 import pdb
 
+
 def unindent(block, ignore_first_line=False):
     lines = str(block).split('\n')
 
@@ -13,11 +14,11 @@ def unindent(block, ignore_first_line=False):
             # skip empty line
             continue
         # look at first non-empty line to see how much indentation to trim
-        ws = re.match(r'\s*',line).group(0)
+        ws = re.match(r'\s*', line).group(0)
         break
 
     if ws:
-        lines = list(map( lambda x: x.replace(ws,'',1), lines ))
+        lines = list(map(lambda x: x.replace(ws, '', 1), lines))
 
     if lines[-1].isspace() or not lines[-1]:
         del lines[-1]
@@ -25,7 +26,8 @@ def unindent(block, ignore_first_line=False):
     else:
         final_eol = ''
 
-    return '\n'.join(lines)+final_eol
+    return '\n'.join(lines) + final_eol
+
 
 #---------------------------------------------------------------------------------------------------
 testdata = [("""
@@ -41,7 +43,7 @@ testdata = [("""
             dictitems:
               log: false
               log_level: 1
-    ""","""
+    """, """
 
 dictitems:
   current_settings: !!python/object/new:{0}.ConfVar
@@ -78,7 +80,7 @@ dictitems:
 log_level=5
 log_file='my.log'
 """
-, True),
+ , True),
     ("""
         log=True
          log_level=5
@@ -88,8 +90,9 @@ log_file='my.log'
  log_level=5
  log_file='my.log'
 """
-, True)
+ , True)
 ]
+
 
 #---------------------------------------------------------------------------------------------------
 @pytest.mark.parametrize("data_in, data_out, check_line", testdata)
@@ -98,6 +101,7 @@ def test_unindent_block(data_in, data_out, check_line):
         assert str(unindent(data_in)) == data_out
     else:
         assert str(unindent(data_in, check_line)) == data_out
+
 
 #-- MAIN ------------------------------------------------------------------------------------------
 if __name__ == "__main__":
