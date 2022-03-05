@@ -315,6 +315,16 @@ class TestApp:
             )
 
     #----------------------------------------------------------------------------------------------
+    @dataclass
+    class Trainee(Person):
+        """Trainee dataclass with class (static) variable
+        """
+        company: ConfigItem = ConfigItem(
+            std='AirBlue',
+            des='name of the company for our trainees'
+        )
+
+    #----------------------------------------------------------------------------------------------
     def test_std_configuration(self):
         # Arrange
         alice = TestApp.Person('Alice', 100)
@@ -377,3 +387,16 @@ class TestApp:
         # Assert
         assert eloy.pay == 160
         assert cur_conf == {'bonus': 0.5, 'department': 'A'}
+
+    #----------------------------------------------------------------------------------------------
+    def test_class_variable(self):
+        # Arrange
+        alice = TestApp.Trainee('Alice', 50)
+        bob = TestApp.Trainee('Bob', 40)
+
+        # Act
+        TestApp.Trainee.company.cur = 'AirYellow'
+
+        # Assert
+        assert alice.company.cur == 'AirYellow'
+        assert bob.company.cur == 'AirYellow'
