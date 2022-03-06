@@ -8,7 +8,7 @@
 from dataclasses import dataclass, field
 
 import pytest
-from confmng import ConfigItem, ConfigManagerBase
+from src.pyconfmng.confmng import ConfigItem, ConfigManagerBase
 
 
 #--------------------------------------------------------------------------------------------------
